@@ -1,0 +1,8 @@
+{
+  "extends": "tslint-config-seek",
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "rules": {
+    "prettier": true,
+    "variable-name": [true, "allow-leading-underscore"]
+  }
+}
