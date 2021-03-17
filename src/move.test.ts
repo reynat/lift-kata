@@ -1,4 +1,4 @@
-import { moveUpAFloor, moveDownAFloor, move } from './move';
+import { moveUpAFloor, moveDownAFloor, moveLift } from './move';
 import { Floor, Lift } from './types';
 
 describe('should move up one floor', () => {
@@ -59,7 +59,7 @@ describe('should move in the correct direction', () => {
         const expected: Lift = {
             floor: Floor.First,
         };
-        const actual = move(lift, 'up');
+        const actual = moveLift(lift, 'up');
 
         expect(actual).toEqual(expected);
     });
@@ -70,7 +70,7 @@ describe('should move in the correct direction', () => {
         const expected: Lift = {
             floor: Floor.Ground,
         };
-        const actual = move(lift, 'down');
+        const actual = moveLift(lift, 'down');
 
         expect(actual).toEqual(expected);
     });

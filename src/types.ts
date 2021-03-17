@@ -32,8 +32,10 @@ interface State {
     destinationFloor: Floor;
 }
 
-type MoveLiftFunction = (lift: Lift) => Lift;
-// type UpdateFloorMonitorFunction = (monitor: FloorMonitor) => FloorMonitor;
+interface LiftCommand {
+    direction: Direction;
+    destinationFloor: Floor;
+}
 
 export {
     Direction,
@@ -44,5 +46,5 @@ export {
     DropOffRequest,
     State,
     FloorMonitor,
-    MoveLiftFunction,
+    LiftCommand,
 };

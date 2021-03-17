@@ -1,4 +1,4 @@
-import { Direction, Lift, MoveLiftFunction } from './types';
+import { Direction, Lift } from './types';
 
 export const MIN_NUM_FLOORS = 1;
 export const MAX_NUM_FLOORS = 4;
@@ -39,7 +39,7 @@ const capAtLowestFloor = (lift: Lift): Lift => {
 
 const stayOnCurrentFloor = (lift: Lift): Lift => lift;
 
-const move = (lift: Lift, direction: Direction): Lift => {
+const moveLift = (lift: Lift, direction: Direction): Lift => {
     const moveInDirection = getFromMapOrElse(
         moveLiftMap,
         direction,
@@ -48,6 +48,7 @@ const move = (lift: Lift, direction: Direction): Lift => {
     return moveInDirection(lift);
 };
 
+type MoveLiftFunction = (lift: Lift) => Lift;
 const moveLiftMap: Record<Direction, MoveLiftFunction> = {
     up: moveUpAFloor,
     down: moveDownAFloor,
@@ -57,4 +58,4 @@ function getFromMapOrElse<T, K extends keyof T>(map: T, key: K, orElse: any) {
     return map[key] ? map[key] : orElse;
 }
 
-export { moveUpAFloor, moveDownAFloor, move };
+export { moveUpAFloor, moveDownAFloor, moveLift };
