@@ -18,7 +18,7 @@ const execute = (currentState: State, nextMove: LiftCommand): State => {
 
 const decideNextMove = (currentState: State): LiftCommand => {
     if (isAtDestinationFloor(currentState)) {
-        const newDestination = findNewDestinationFloor(currentState.monitor);
+        const newDestination = findNewDestinationFloor(currentState);
         const newDirection = determineLiftDirection(currentState.lift.floor, newDestination);
         return {
             direction: newDirection,
@@ -38,8 +38,9 @@ const isAtDestinationFloor = (currentState: State) => {
     return currentState.lift.floor === currentState.destinationFloor;
 };
 
-const findNewDestinationFloor = (monitor: FloorMonitor): Floor | undefined => {
-    return monitor.dropOff.shift()?.floor;
+const findNewDestinationFloor = (state: State): Floor | undefined => {
+    // Priority to drop off requests
+    return state.lift.dropOffRequests.shift()?.floor ?? state.monitor.pickUpRequests.shift()?.floor;
 };
 
 const determineLiftDirection = (

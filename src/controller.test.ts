@@ -8,10 +8,11 @@ import { Floor, FloorMonitor, Lift, State } from './types';
 describe('isAtDestinationFloor', () => {
     it('should return true if lift is at destination floor', () => {
         const monitor: FloorMonitor = {
-            dropOff: [],
+            pickUpRequests: [],
         };
         const lift: Lift = {
             floor: Floor.First,
+            dropOffRequests: []
         };
         const currentState: State = {
             lift,
@@ -24,10 +25,11 @@ describe('isAtDestinationFloor', () => {
     });
     it('should return false if lift is not at destination floor', () => {
         const monitor: FloorMonitor = {
-            dropOff: [],
+            pickUpRequests: [],
         };
         const lift: Lift = {
             floor: Floor.Second,
+            dropOffRequests: []
         };
         const currentState: State = {
             lift,
@@ -41,26 +43,65 @@ describe('isAtDestinationFloor', () => {
 });
 
 describe('findNewDestinationFloor', () => {
-    it('should return the first request in the floor monitor', () => {
+    it('should return the first drop off request in the lift', () => {
         const monitor: FloorMonitor = {
-            dropOff: [
-                {
-                    floor: Floor.Ground,
-                },
-                {
-                    floor: Floor.Basement,
-                },
-            ],
+            pickUpRequests: [{
+                direction: 'up',
+                floor: Floor.Second
+            }],
         };
-        const actual = findNewDestinationFloor(monitor);
+        const lift: Lift = {
+            floor: Floor.First,
+            dropOffRequests: [{
+                floor: Floor.Ground
+            }]
+        };
+        const currentState: State = {
+            lift,
+            monitor,
+            destinationFloor: Floor.First,
+        };
+
+        const actual = findNewDestinationFloor(currentState);
 
         expect(actual).toEqual(Floor.Ground);
     });
-    it('should return undefined if there are no requests', () => {
+    it('should return the first pickUpRequest if there are no dropOffRequests', () => {
         const monitor: FloorMonitor = {
-            dropOff: [],
+            pickUpRequests: [{
+                direction: 'up',
+                floor: Floor.Second
+            }],
         };
-        const actual = findNewDestinationFloor(monitor);
+        const lift: Lift = {
+            floor: Floor.First,
+            dropOffRequests: []
+        };
+        const currentState: State = {
+            lift,
+            monitor,
+            destinationFloor: Floor.First,
+        };
+
+        const actual = findNewDestinationFloor(currentState);
+
+        expect(actual).toEqual(Floor.Second);
+    });
+    it('should return undefined if there are no dropOffRequests nor pickUpRequests', () => {
+        const monitor: FloorMonitor = {
+            pickUpRequests: [],
+        };
+        const lift: Lift = {
+            floor: Floor.First,
+            dropOffRequests: []
+        };
+        const currentState: State = {
+            lift,
+            monitor,
+            destinationFloor: Floor.First,
+        };
+
+        const actual = findNewDestinationFloor(currentState);
 
         expect(actual).toEqual(undefined);
     });

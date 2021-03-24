@@ -1,13 +1,15 @@
 import { decideNextMove, execute } from "./controller";
-import { generateDropOffRequests, sendDropOffRequests, updateFloorMonitor } from "./floorMonitor";
+import { generateRequests } from './generate-requests';
+import { sendRequests } from './send-requests';
 import { Floor, FloorMonitor, State } from "./types";
 
 const createInitialState = (): State => {
     const lift = {
-        floor: Floor.Basement
+        floor: Floor.Basement,
+        dropOffRequests: []
     };
     const monitor: FloorMonitor = {
-        dropOff: []
+        pickUpRequests: []
     }
     const destinationFloor: Floor = Floor.Basement
     return {
@@ -25,15 +27,14 @@ let i = 0;
 
 while (i < NUM_ROUNDS) {
     // Generate random requests
-    const newDropOffRequests = generateDropOffRequests();
-    const newFloorMonitor = sendDropOffRequests(newDropOffRequests, initialState.monitor);
-    const nextState = updateFloorMonitor(initialState, newFloorMonitor);
+    const newRequests = generateRequests();
+    const nextState = sendRequests(newRequests, initialState);
 
-    console.log("New requests: ", JSON.stringify(nextState));
+    console.log("New requests: ", JSON.stringify(newRequests, null, 2));
 
     const nextDirection = decideNextMove(nextState);
 
-    console.log("Next direction: ", JSON.stringify(nextDirection));
+    console.log("Next lift command: ", JSON.stringify(nextDirection, null, 2));
 
     const newState = execute(nextState, nextDirection);
     
@@ -42,7 +43,7 @@ while (i < NUM_ROUNDS) {
     i++;
 
     console.log('New state ', i);
-    console.log(JSON.stringify(newState));
+    console.log(JSON.stringify(newState, null, 2));
 }
 
 

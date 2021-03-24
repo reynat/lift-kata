@@ -1,4 +1,5 @@
-type Direction = 'up' | 'down' | 'none';
+const direction = ['up', 'down'];
+type Direction = typeof direction[number];
 
 enum Floor {
     Basement = 1,
@@ -9,9 +10,10 @@ enum Floor {
 
 interface Lift {
     floor: Floor;
+    dropOffRequests: DropOffRequest[];
 }
 
-interface PickupRequest {
+interface PickUpRequest {
     floor: Floor;
     direction: Direction;
 }
@@ -20,10 +22,10 @@ interface DropOffRequest {
     floor: Floor;
 }
 
-type Request = PickupRequest | DropOffRequest;
+type LiftRequest = PickUpRequest | DropOffRequest;
 
 interface FloorMonitor {
-    dropOff: DropOffRequest[];
+    pickUpRequests: PickUpRequest[];
 }
 
 interface State {
@@ -39,10 +41,11 @@ interface LiftCommand {
 
 export {
     Direction,
+    direction,
     Floor,
     Lift,
-    Request,
-    PickupRequest,
+    LiftRequest,
+    PickUpRequest,
     DropOffRequest,
     State,
     FloorMonitor,
